@@ -37,6 +37,10 @@ Route::get('/dashboard', function () {
     ]);
 })->name('dashboard');
 
+Route::fallback(function () {
+    return Inertia::render('Error404');
+});
+
 Route::get('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
 require __DIR__.'/auth.php';

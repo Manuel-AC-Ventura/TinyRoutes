@@ -7,7 +7,9 @@ export const MenuItems = ({ menuOpen, user, handleToggleLoginModal, handleToggle
         <li className="font-semibold cursor-pointer hover:opacity-75">
           <a href="/dashboard">Dashboard</a>
         </li>
-        <li className="font-semibold cursor-pointer hover:opacity-75">Ajuda</li>
+        <li className="font-semibold cursor-pointer hover:opacity-75">
+          <a href="/help">Ajuda</a>
+        </li>
         <li className="font-semibold cursor-pointer hover:opacity-75">
           <a href="/logout">Logout</a>
         </li>
