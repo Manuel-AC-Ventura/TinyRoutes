@@ -1,0 +1,47 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Inertia\Inertia;
+use App\Models\Link;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
+
+
+class LinkController extends Controller
+{
+    public function store(Request $request)
+    {
+        $validator = $request->validate([
+            'url' => 'required|url'
+        ]);
+
+        $shortKey = Str::random(6);
+
+        while (Link::where('shortened', $shortKey)->exists()) {
+            $shortKey = Str::random(6);
+        }
+
+        $link = new Link([
+            'idUser' => Auth::id(),
+            'original' => $request->input('url'),
+            'shortened' => $shortKey,
+        ]);
+
+        $link->save();
+
+        return response()->json([
+            'original' => $link->original,
+            'shortened' => url('/').'/open/'.$link->shortened,
+        ], 201);
+    }
+
+    public function open($shortened){
+        $link = Link::where('shortened', $shortened)->firstOrFail();
+
+        return redirect($link->original);
+    }
+}
