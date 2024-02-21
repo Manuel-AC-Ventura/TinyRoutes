@@ -42,7 +42,7 @@ export const Header = () => {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: 'spring', stiffness: 50 }}
-      className="w-full text-white flex flex-row items-center justify-between"
+      className="w-full bg-slate-950 text-white flex flex-row items-center justify-between"
     >
       <h1 className="text-3xl font-bold">
         <a href="/">ShortWay</a>

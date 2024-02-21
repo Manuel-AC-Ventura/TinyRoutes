@@ -6,7 +6,7 @@ import { Header } from "@/Components/Header";
 import { Shortened } from "@/Components/Shortened";
 
 
-export default function Home(){
+export default function Home({ auth }){
   const [url, setUrl] = useState('');
   const [shortened, setShortened] = useState('');
 

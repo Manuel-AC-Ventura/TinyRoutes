@@ -1,21 +1,20 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
+//import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
+import { Header } from '@/Components/Header';
+import { Head, usePage } from '@inertiajs/react';
 
-export default function Dashboard({ auth }) {
-    return (
-        <AuthenticatedLayout
-            user={auth.user}
-            header={<h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Dashboard</h2>}
-        >
-            <Head title="Dashboard" />
+export default function Dashboard() {
+  const { user } = usePage().props;
 
-            <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900 dark:text-gray-100">You're logged in!</div>
-                    </div>
-                </div>
-            </div>
-        </AuthenticatedLayout>
-    );
+  if(!user){
+    window.location = '/'
+  }
+  
+  return (
+    <div className="w-full min-h-screen flex flex-col gap-20 py-7 px-10 bg-slate-950">
+      <Head title='Dashboard'/>
+      <Header/>
+
+      
+    </div>
+  );
 }
