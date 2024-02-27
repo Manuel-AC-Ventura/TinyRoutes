@@ -15,29 +15,38 @@ class LinkController extends Controller
 {
     public function store(Request $request)
     {
-        $validator = $request->validate([
+        $validator = Validator::make($request->all(), [
             'url' => 'required|url'
         ]);
-
+    
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
+        }
+    
         $shortKey = Str::random(6);
-
+    
         while (Link::where('shortened', $shortKey)->exists()) {
             $shortKey = Str::random(6);
         }
-
+    
         $link = new Link([
-            'idUser' => Auth::id(),
+            'idUser' => Auth::id(), 
             'original' => $request->input('url'),
             'shortened' => $shortKey,
         ]);
-
+    
+        if ($request->has('id')) {
+            $link->idUser = $request->input('id');
+        }
+    
         $link->save();
-
+    
         return response()->json([
             'original' => $link->original,
             'shortened' => url('/').'/open/'.$link->shortened,
         ], 201);
     }
+    
 
     public function open($shortened){
         $link = Link::where('shortened', $shortened)->firstOrFail();

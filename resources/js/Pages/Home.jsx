@@ -2,25 +2,34 @@ import axios from "axios";
 import { useState } from "react"
 import { motion } from "framer-motion";
 import { Head } from "@inertiajs/react";
+import { usePage } from "@inertiajs/react";
 import { Header } from "@/Components/Header";
 import { Shortened } from "@/Components/Shortened";
 
 
 export default function Home({ auth }){
+  const { user } = usePage().props;
   const [url, setUrl] = useState('');
   const [shortened, setShortened] = useState('');
 
-  const handleSubmit = async (event)=>{
-    event.preventDefault();
 
-    try {
-      const response = await axios.post('/api/shorten', { url });
-      console.log(response.data)
-      setShortened(response.data.shortened)
-    } catch (error) {
-      console.log(error)
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+  
+    let request = { url };
+    if (user && user.id) {
+      request.id = user.id;
     }
-  }
+  
+    try {
+      const response = await axios.post('/api/shorten', request);
+      console.log(response.data);
+      setShortened(response.data.shortened);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
 
   return(
     <div className="w-full min-h-screen flex flex-col gap-20 py-7 px-10 bg-slate-950">

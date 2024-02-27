@@ -14,7 +14,9 @@ export default function Dashboard() {
       <Head title='Dashboard'/>
       <Header/>
 
-      
+      <main className='w-full bg-slate-950'>
+        
+      </main>
     </div>
   );
 }
