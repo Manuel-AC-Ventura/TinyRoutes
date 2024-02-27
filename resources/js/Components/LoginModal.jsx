@@ -19,7 +19,7 @@ export const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
 
     try {
       const res = await axios.post('/login', { email, password });
-      onLoginSuccess(res.data); // Call the function to handle successful login
+      onLoginSuccess(res.data);
     } catch (error) {
       if (error.response) {
         if (error.response.status === 400) {
