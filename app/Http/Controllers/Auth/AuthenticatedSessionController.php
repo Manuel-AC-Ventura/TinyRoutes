@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Validation\ValidationException;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -29,13 +30,27 @@ class AuthenticatedSessionController extends Controller
      * Handle an incoming authentication request.
      */
     public function store(LoginRequest $request): RedirectResponse
-    {
-        $request->authenticate();
+{
+    try {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
 
-        $request->session()->regenerate();
+        if (Auth::attempt($credentials)) {
+            $request->authenticate();
+            $request->session()->regenerate();
 
-        return redirect()->intended(RouteServiceProvider::HOME);
+            return redirect()->intended(RouteServiceProvider::HOME);
+        }
+
+        throw ValidationException::withMessages([
+            'email' => 'As credenciais fornecidas estão incorretas.',
+        ]);
+    } catch (ValidationException $e) {
+        return response()->redirectToRoute('login')->withErrors($e->errors())->withInput($request->only('email'))->setStatusCode(400);
     }
+}
 
     /**
      * Destroy an authenticated session.

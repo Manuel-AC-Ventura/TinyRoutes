@@ -6,6 +6,7 @@ import axios from 'axios';
 export const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const modalVariants = {
     hidden: { opacity: 0, scale: 0.5 },
@@ -20,7 +21,17 @@ export const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
       const res = await axios.post('/login', { email, password });
       onLoginSuccess(res.data); // Call the function to handle successful login
     } catch (error) {
-      console.log(error);
+      if (error.response) {
+        if (error.response.status === 400) {
+          setErrorMessage('Credenciais inválidas. Por favor, verifique seu e-mail e senha.');
+        }
+      }else if (error.request) {
+        // A solicitação foi feita, mas não houve resposta do servidor
+        setErrorMessage('Não foi possível conectar ao servidor. Por favor, tente novamente mais tarde.');
+      } else {
+        // Ocorreu um erro ao configurar a solicitação
+        setErrorMessage('Ocorreu um erro ao enviar a solicitação. Por favor, verifique sua conexão com a internet.');
+      }
     }
   };
 
@@ -60,6 +71,7 @@ export const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
                 placeholder="Senha"
               />
             </div>
+            {errorMessage && <p className="text-red-500 mt-4">{errorMessage}</p>}
             <button type="submit" className="mt-8 bg-blue-500 text-white rounded-md px-4 py-2 w-full">
               Entrar
             </button>
